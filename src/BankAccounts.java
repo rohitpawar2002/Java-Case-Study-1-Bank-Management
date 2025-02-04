@@ -1,8 +1,9 @@
 import java.time.LocalDate;
+
 import java.util.Random;
 import java.util.Scanner;
 
-public class BankAccounts {
+public abstract  class  BankAccounts {
     Scanner sc = new Scanner(System.in);
     Random rand = new Random();
 
@@ -63,16 +64,39 @@ public class BankAccounts {
         return accCreationDate;
     }
 
-    public boolean deposit()
+    public double deposit()
     {
         System.out.println("Enter how much you want to deposit");
         double amount = sc.nextInt();
-        long rand_int1 = rand.nextLong(1000);
+//        long TransactionID = rand.nextLong(1000);
         LocalDate date = LocalDate.now();
-        TransactionHistory t1 = new TransactionHistory(rand_int1,"Deposit",amount,date,getBalance()+amount);
+//        transaction[Tcount++] = new TransactionHistory(TransactionID,"Deposit",amount,date,getBalance()+amount);
         setBalance(getBalance()+amount);
-        return true;
+        return amount;
+    }
+    public abstract double withdraw();
+
+    @Override
+    public String toString() {
+        return "BankAccounts [ accountNumber=" + accountNumber + ", accHolderName="
+                + accHolderName + ", balance=" + balance + ", accountType=" + accountType + ", accCreationDate="
+                + accCreationDate + "]";
     }
 
+    public abstract void displayTransactionsHistory();
+
+
+    public void displayAccInfo() {
+        System.out.println("Account Number - "+ getAccountNumber());
+        System.out.println("Account Holder Name - "+ getAccHolderName());
+        System.out.println("Balance - "+ getBalance());
+        System.out.println("Account Type - "+ getAccountType());
+        System.out.println("Account Creation Date - "+ getAccCreationDate());
+
+    }
+
+    public int todaysTransactionCount() {
+        return 0;
+    }
 
 }

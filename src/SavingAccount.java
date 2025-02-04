@@ -1,21 +1,23 @@
 import java.time.LocalDate;
 
-public class SavingAccount extends BankAccounts{
-    double minBalance;
-    double interestRate;
+public class SavingAccount extends BankAccounts {
 
-    public SavingAccount(long accountNumber, String accHolderName, double balance, String accountType, LocalDate accCreationDate, double minBalance, double interestRate) {
+    static double minBalance = 10000;
+    double interestRate;
+    int transactionCount = 0;
+    TransactionHistory[] transaction = new TransactionHistory[50];
+
+    public SavingAccount(long accountNumber, String accHolderName, double balance, String accountType, LocalDate accCreationDate, double interestRate) {
         super(accountNumber, accHolderName, balance, accountType, accCreationDate);
-        this.minBalance = minBalance;
         this.interestRate = interestRate;
     }
 
-    public double getMinBalance() {
+    public static double getMinBalance() {
         return minBalance;
     }
 
-    public void setMinBalance(double minBalance) {
-        this.minBalance = minBalance;
+    public static void setMinBalance(double MinBalance) {
+        minBalance = MinBalance;
     }
 
     public double getInterestRate() {
@@ -25,4 +27,36 @@ public class SavingAccount extends BankAccounts{
     public void setInterestRate(double interestRate) {
         this.interestRate = interestRate;
     }
+
+    public double deposit() {
+
+        System.out.println("Enter how much you want to deposit");
+        double amount = sc.nextInt();
+        long rand_int1 = rand.nextLong(1000);
+        LocalDate date = LocalDate.now();
+        transaction[transactionCount++] = new TransactionHistory(rand_int1, "Deposit", amount, date, getBalance() + amount);
+        setBalance(getBalance() + amount);
+        return amount;
+
+    }
+
+    public double withdraw() {
+        System.out.println("Enter amount you want to withdraw");
+        double amount = sc.nextInt();
+        if((getBalance() - amount) > getMinBalance()){
+            long rand_int1 = rand.nextLong(1000);
+            LocalDate date = LocalDate.now();
+            transaction[transactionCount++] = new TransactionHistory(rand_int1, "Withdraw", amount, date, getBalance() - amount);
+            setBalance(getBalance() - amount);
+            return amount;
+        }
+        return -3;
+    }
+
+    public void displayTransactionsHistory() {
+        for (int i = 0; i < transactionCount; i++) {
+            System.out.println("[ Transaction ID - " + transaction[i].getTransactionId() + ", Type of Transaction - "+ transaction[i].getType()+", Amount - "+transaction[i].getAmount()+", Date - "+transaction[i].getDate()+", Balance - "+transaction[i].getBalance()+"]");
+        }
+    }
+
 }
