@@ -49,4 +49,13 @@ public class CurrentAccount extends BankAccounts{
     {
 
     }
+
+    public int todaysTransactionCount()
+    {
+        return 0;
+    }
+
+    public int todaysTransactionsCount() {
+        return 0;
+    }
 }

@@ -101,4 +101,19 @@ public class SalaryAccount extends BankAccounts {
         }
         return count;
     }
+
+    public int todaysTransactionsCount() {
+        int count = 0;
+        if (transactionCount != 0) {
+            //System.out.println("Account Holder Name: " + getAccHolderName() + " Account Number: " + getAccountNumber());
+            for (int i = 0; i < transactionCount; i++) {
+                if (transaction[i].date.isEqual(LocalDate.now())) {
+                    //transaction[i].displayTransactions();
+                    //System.out.println("[ Transaction ID - " + transaction[i].getTransactionId() + ", Type of Transaction - "+ transaction[i].getType()+", Amount - "+transaction[i].getAmount()+", Date - "+transaction[i].getDate()+", Balance - "+transaction[i].getBalance()+"]");
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
 }

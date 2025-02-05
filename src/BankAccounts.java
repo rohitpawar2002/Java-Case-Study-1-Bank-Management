@@ -95,8 +95,8 @@ public abstract  class  BankAccounts {
 
     }
 
-    public int todaysTransactionCount() {
-        return 0;
-    }
+    public abstract int todaysTransactionCount();
+
+    public abstract int todaysTransactionsCount();
 
 }

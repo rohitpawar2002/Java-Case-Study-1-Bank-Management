@@ -9,7 +9,7 @@ public class BankManagement {
     String IFSCCode;
     double openingBalance = 100;
     double temp = openingBalance;       // Change
-    int accountCount = 1;
+    int accountCount = 2;
     Random rand = new Random();
     BankAccounts[] account;
 
@@ -20,6 +20,7 @@ public class BankManagement {
         account = new BankAccounts[20];
 
         account[0] = new SalaryAccount(1234566, "Rohit Pawar", 100, "Saving", LocalDate.of(2024, 11, 12), LocalDate.now());
+        account[1] = new LoanAccount(123,"Abc ert",1000,"Loan Account",LocalDate.of(2023, 1, 1),7.5,6,"Home Loan",6);
 
     }
 
@@ -110,8 +111,11 @@ public class BankManagement {
     }
 
     public boolean createAccount() {
+        System.out.println("+--------------------------------------------+");
         System.out.println("Which Type of Account you want to open:");
-        System.out.println("1.Saving\n2.Salary.\n3.current.\n4Loan ");
+        System.out.println("1.Saving\n2.Salary\n3.current\n4.Loan ");
+        System.out.println("+--------------------------------------------+");
+        System.out.println("Enter your choice");
         int ch = sc.nextInt();
         sc.nextLine();
         System.out.println("Enter Holder Name:");
@@ -170,41 +174,122 @@ public class BankManagement {
         int count = 0;
 
         System.out.println("Today's Created Accounts:");
+        System.out.println("");
+        System.out.println("+----------------------------------------------------------+");
         for (int i = 0; i < accountCount; i++) {
             if (account[i].accCreationDate.isEqual(LocalDate.now())) {
                 account[i].displayAccInfo();
                 count++;
             }
         }
+        System.out.println("");
+        System.out.println("+----------------------------------------------------------+");
         System.out.println("Total Number of Account Created:" + count);
-
+        System.out.println("+----------------------------------------------------------+");
         System.out.println("Today's Transactions:");
+        System.out.println("");
         int totalTransactionCount = 0;
         for (int i = 0; i < accountCount; i++) {
             totalTransactionCount += account[i].todaysTransactionCount();
         }
+        System.out.println("+----------------------------------------------------------+");
         System.out.println("Today's Transactions Count:" + totalTransactionCount);
+        System.out.println("+----------------------------------------------------------+");
         System.out.println("Bank Opening Balance " + temp);
+        System.out.println("+----------------------------------------------------------+");
         System.out.println("Bank Closing Balance " + openingBalance);
-
+        System.out.println("+----------------------------------------------------------+");
     }
 
-    public boolean accountDelete() {
+    public void basicDailyReport()
+    {
+        int count = 0;
+
+
+        for (int i = 0; i < accountCount; i++) {
+            if (account[i].accCreationDate.isEqual(LocalDate.now())) {
+                //account[i].displayAccInfo();
+                count++;
+            }
+        }
+        System.out.println("");
+        System.out.println("+----------------------------------------------------------+");
+        System.out.println("Total Number of Account Created:" + count);
+        System.out.println("+----------------------------------------------------------+");
+        int totalTransactionCount = 0;
+        for (int i = 0; i < accountCount; i++) {
+            totalTransactionCount += account[i].todaysTransactionsCount();
+        }
+        System.out.println("+----------------------------------------------------------+");
+        System.out.println("Today's Transactions Count:" + totalTransactionCount);
+        System.out.println("+----------------------------------------------------------+");
+        System.out.println("Bank Opening Balance " + temp);
+        System.out.println("+----------------------------------------------------------+");
+        System.out.println("Bank Closing Balance " + openingBalance);
+        System.out.println("+----------------------------------------------------------+");
+    }
+
+    public int accountDelete() {
         System.out.println("Enter account number");
         long accNo = sc.nextLong();
         int index = findAccount(accNo);
         if (index != -1) {
-            if (account[index] instanceof LoanAccount ) {
+            if (account[index] instanceof LoanAccount || account[index] instanceof CurrentAccount) {
                 if (account[index].getBalance() >= 0) {
                     for (int j = index; j < accountCount; j++) {
                         account[index] = account[index + 1];
                     }
                     accountCount--;
-                    return true;
-                }
+                    return 0;
+                } else
+                    return -1;
+            } else {
+                if (account[index].getBalance() >= 0) {
+                    for (int j = index; j < accountCount; j++) {
+                        account[index] = account[index + 1];
+                    }
+                    accountCount--;
+                    return 0;
+                } else
+                    return -1;
             }
         }
-        return false;
+        return -2;
+    }
+
+    public void payEmi() {
+        System.out.println("Enter account number");
+        long accNo = sc.nextLong();
+        int index = findAccount(accNo);
+        if (index != -1) {
+            if (account[index] instanceof LoanAccount) {
+                LoanAccount l1 = (LoanAccount) account[index];
+                l1.payEMI();
+            }
+            else
+                System.out.println("Your account is not Loan Account you cannot payEmi");
+        }
+    }
+
+    public void checkInterest()
+    {
+        System.out.println("Enter account number");
+        long accNo = sc.nextLong();
+        int index = findAccount(accNo);
+        if (index != -1) {
+            if (account[index] instanceof LoanAccount )
+            {
+                LoanAccount l = (LoanAccount) account[index];
+                l.checkLoanInterest();
+            }
+            else if(account[index] instanceof SavingAccount)
+            {
+                SavingAccount s = (SavingAccount) account[index];
+                s.checkLoanInterest();
+            }
+            else
+                System.out.println("interest rate is for only saving and loan and Your account is not saving or loan");
+        }
     }
 
 }

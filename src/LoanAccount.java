@@ -57,8 +57,8 @@ public class LoanAccount extends BankAccounts {
 
     public double calculateEMI() {
         double monthlyInterestRate = (interestRate / 100) / 12;
-        return (balance * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, tenureMonths))
-                / (Math.pow(1 + monthlyInterestRate, tenureMonths) - 1);
+        return (Math.abs(balance * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, tenureMonths))
+                / (Math.pow(1 + monthlyInterestRate, tenureMonths) - 1));
     }
 
 
@@ -73,12 +73,11 @@ public class LoanAccount extends BankAccounts {
         }
     }
 
-    public double applyLoanInterest() {
-        double monthlyInterest = (balance * (interestRate / 100)) / 12; // Monthly interest
-        balance += monthlyInterest; // Add interest to loan balance
+    public void checkLoanInterest() {
+        double monthlyInterest = (Math.abs(balance) * (interestRate / 100)) / getTenureMonths(); // Monthly interest
+        //balance += monthlyInterest; // Add interest to loan balance
 
-        System.out.println("Interest of ₹" + monthlyInterest + " applied. New Loan Balance: ₹" + balance);
-        return monthlyInterest;
+        System.out.println("Interest of ₹" + monthlyInterest + " applied.");
     }
 
     public boolean isLoanOverdue() {
@@ -93,23 +92,48 @@ public class LoanAccount extends BankAccounts {
     public boolean payEMI() {
         System.out.println("How much amount you want to pay");
         double amount = sc.nextDouble();
-        if (amount < calculateEMI()) {
-            System.out.println("Error: Minimum EMI payment required: ₹" + calculateEMI());
-            return false;
+
+        if(isLoanOverdue()) {
+
+            double lateFee = balance * 0.02;
+            System.out.println("Loan is overdue you have to pay overdue charges of it your late fee amount is"+lateFee);
+
+            balance -= lateFee;
+            //System.out.println(calculateEMI());
+            if (amount < calculateEMI()) {
+                System.out.println("Error: Minimum EMI payment required: ₹" + calculateEMI());
+                return false;
+            }
+
+            balance += amount;
+            System.out.println("Payment of ₹" + amount + " received. Remaining Loan Balance: ₹" + balance);
+
+            if (balance >= 0) {
+                System.out.println("Congratulations! Your loan is fully repaid.");
+
+            }
+            return true;
         }
+        else
+        {
+            System.out.println(calculateEMI());
+            if (amount < calculateEMI()) {
+                System.out.println("Error: Minimum EMI payment required: ₹" + calculateEMI());
+                return false;
+            }
 
-        balance -= amount;
-        System.out.println("Payment of ₹" + amount + " received. Remaining Loan Balance: ₹" + balance);
+            balance += amount;
+            System.out.println("Payment of ₹" + amount + " received. Remaining Loan Balance: ₹" + balance);
 
-        if (balance <= 0) {
-            System.out.println("Congratulations! Your loan is fully repaid.");
+            if (balance >= 0) {
+                System.out.println("Congratulations! Your loan is fully repaid.");
 
+            }
+            return true;
         }
-        return true;
-
     }
 
-    public boolean applyLateFee() {
+    public boolean checkLateFee() {
         if (isLoanOverdue()) {
             double lateFee = balance * 0.02;
             balance -= lateFee;
@@ -147,6 +171,36 @@ public class LoanAccount extends BankAccounts {
         transaction[transactionCount++] = new TransactionHistory(rand_int1, "Deposit", Amount, date, getBalance() + Amount);
         setBalance(getBalance()+Amount);
         return Amount;
+    }
+
+    public int todaysTransactionCount() {
+        int count = 0;
+        if (transactionCount != 0) {
+            System.out.println("Account Holder Name: " + getAccHolderName() + " Account Number: " + getAccountNumber());
+            for (int i = 0; i < transactionCount; i++) {
+                if (transaction[i].date.isEqual(LocalDate.now())) {
+                    //transaction[i].displayTransactions();
+                    System.out.println("[ Transaction ID - " + transaction[i].getTransactionId() + ", Type of Transaction - "+ transaction[i].getType()+", Amount - "+transaction[i].getAmount()+", Date - "+transaction[i].getDate()+", Balance - "+transaction[i].getBalance()+"]");
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
+    public int todaysTransactionsCount() {
+        int count = 0;
+        if (transactionCount != 0) {
+            //System.out.println("Account Holder Name: " + getAccHolderName() + " Account Number: " + getAccountNumber());
+            for (int i = 0; i < transactionCount; i++) {
+                if (transaction[i].date.isEqual(LocalDate.now())) {
+                    //transaction[i].displayTransactions();
+                    //System.out.println("[ Transaction ID - " + transaction[i].getTransactionId() + ", Type of Transaction - "+ transaction[i].getType()+", Amount - "+transaction[i].getAmount()+", Date - "+transaction[i].getDate()+", Balance - "+transaction[i].getBalance()+"]");
+                    count++;
+                }
+            }
+        }
+        return count;
     }
 
 }
