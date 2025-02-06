@@ -90,47 +90,32 @@ public class LoanAccount extends BankAccounts {
     }
 
     public boolean payEMI() {
-        System.out.println("How much amount you want to pay");
+        LocalDate dueDate = accCreationDate.plusMonths(tenureMonths);
+        boolean isOverDue = LocalDate.now().isAfter(dueDate);
+        double lateFee = 0;
+        if (isOverDue) {
+            lateFee = Math.abs(balance) * 0.02;
+
+            System.out.println(" Loan is overdue.");
+            System.out.println("You have to pay Late fee:  "+ lateFee);
+        }
+
+        System.out.println("How much amount do you want to pay?");
         double amount = sc.nextDouble();
 
-        if(isLoanOverdue()) {
-
-            double lateFee = balance * 0.02;
-            System.out.println("Loan is overdue you have to pay overdue charges of it your late fee amount is"+lateFee);
-
-            balance -= lateFee;
-            //System.out.println(calculateEMI());
-            if (amount < calculateEMI()) {
-                System.out.println("Error: Minimum EMI payment required: ₹" + calculateEMI());
-                return false;
-            }
-
-            balance += amount;
-            System.out.println("Payment of ₹" + amount + " received. Remaining Loan Balance: ₹" + balance);
-
-            if (balance >= 0) {
-                System.out.println("Congratulations! Your loan is fully repaid.");
-
-            }
-            return true;
+        double emiWithLateFee = calculateEMI() + lateFee;
+        if (amount < emiWithLateFee) {
+            System.out.println("Error: Minimum EMI payment required: ₹" + emiWithLateFee);
+            return false;
         }
-        else
-        {
-            System.out.println(calculateEMI());
-            if (amount < calculateEMI()) {
-                System.out.println("Error: Minimum EMI payment required: ₹" + calculateEMI());
-                return false;
-            }
+        balance += amount;
+        System.out.println("Payment of ₹" + amount + " received. Remaining Loan Balance: ₹" + balance);
 
-            balance += amount;
-            System.out.println("Payment of ₹" + amount + " received. Remaining Loan Balance: ₹" + balance);
-
-            if (balance >= 0) {
-                System.out.println("Congratulations! Your loan is fully repaid.");
-
-            }
-            return true;
+        if (balance >= 0) {
+            System.out.println("Congratulations! Your loan is fully repaid.");
         }
+
+        return true;
     }
 
     public boolean checkLateFee() {

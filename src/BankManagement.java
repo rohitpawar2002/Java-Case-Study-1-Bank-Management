@@ -12,6 +12,8 @@ public class BankManagement {
     int accountCount = 2;
     Random rand = new Random();
     BankAccounts[] account;
+    int deletedAccCount = 0;
+    BankAccounts[] deletedAcc = new BankAccounts[50];
 
     public BankManagement(String bankName, String IFSCCode) {
         this.bankName = bankName;
@@ -143,7 +145,7 @@ public class BankManagement {
         } else if (ch == 3) {
             System.out.println("Enter much Initial balance you want to add");
             double balance = sc.nextDouble();
-            account[accountCount++] = new CurrentAccount(accNumber, holderName, balance, "Current", date, 50000, 10, 30);
+            account[accountCount++] = new CurrentAccount(accNumber, holderName, balance, "Current", date, 30);
             System.out.println("Your account number is : " + accNumber);
             openingBalance += 0;
 
@@ -172,6 +174,7 @@ public class BankManagement {
 
     public void dailyReport() {
         int count = 0;
+        int Dcount = 0;
 
         System.out.println("Today's Created Accounts:");
         System.out.println("");
@@ -182,6 +185,20 @@ public class BankManagement {
                 count++;
             }
         }
+        System.out.println("");
+        System.out.println("+--------------------------------------------------------------+");
+        System.out.println("Todays Deleted Accounts");
+        for (int i = 0 ; i<deletedAccCount ; i++)
+        {
+            if(deletedAcc[i].accCreationDate.isEqual(LocalDate.now()))
+            {
+                deletedAcc[i].displayAccInfo();
+                Dcount++;
+            }
+        }
+        System.out.println("");
+        System.out.println("+--------------------------------------------------------------+");
+        System.out.println("Total Number of deleted account:"+Dcount);
         System.out.println("");
         System.out.println("+----------------------------------------------------------+");
         System.out.println("Total Number of Account Created:" + count);
@@ -236,6 +253,8 @@ public class BankManagement {
         if (index != -1) {
             if (account[index] instanceof LoanAccount || account[index] instanceof CurrentAccount) {
                 if (account[index].getBalance() >= 0) {
+                    deletedAcc[deletedAccCount] = account[index];
+                    deletedAccCount++;
                     for (int j = index; j < accountCount; j++) {
                         account[index] = account[index + 1];
                     }
@@ -245,6 +264,8 @@ public class BankManagement {
                     return -1;
             } else {
                 if (account[index].getBalance() >= 0) {
+                    deletedAcc[deletedAccCount] = account[index];
+                    deletedAccCount++;
                     for (int j = index; j < accountCount; j++) {
                         account[index] = account[index + 1];
                     }

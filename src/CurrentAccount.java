@@ -1,28 +1,26 @@
 import java.time.LocalDate;
+import java.util.Scanner;
 
-public class CurrentAccount extends BankAccounts{
-    double overDraftLimit;
+public class CurrentAccount extends BankAccounts {
+    Scanner sc = new Scanner(System.in);
+    static double overDraftLimit = 10000;
     double overDraftCharges;
-    int duration ;
-    double interestRate;
+    int duration;
+    LocalDate overdraftDate;
+    int transactionCount = 0;
+    TransactionHistory[] transaction = new TransactionHistory[50];
 
-    public CurrentAccount(long accountNumber, String accHolderName, double balance, String accountType, LocalDate accCreationDate, double overDraftLimit, double interestRate,int duration) {
+    public CurrentAccount(long accountNumber, String accHolderName, double balance, String accountType, LocalDate accCreationDate, int duration) {
         super(accountNumber, accHolderName, balance, accountType, accCreationDate);
-        this.overDraftLimit = overDraftLimit;
-        this.interestRate = interestRate;
         this.duration = duration;
     }
 
-    public CurrentAccount(long accountNum, String holderName, int i, String string, LocalDate date) {
-        // TODO Auto-generated constructor stub
-    }
-
-    public double getOverDraftLimit() {
+    public static double getOverDraftLimit() {
         return overDraftLimit;
     }
 
-    public void setOverDraftLimit(double overDraftLimit) {
-        this.overDraftLimit = overDraftLimit;
+    public static void setOverDraftLimit(double OverDraftLimit) {
+        overDraftLimit = OverDraftLimit;
     }
 
     public double getOverDraftCharges() {
@@ -33,25 +31,49 @@ public class CurrentAccount extends BankAccounts{
         this.overDraftCharges = overDraftCharges;
     }
 
-    @Override
-    public String toString() {
-        return "CurrentAccount [ accountNumber=" + accountNumber
-                + ", accHolderName=" + accHolderName + ", balance=" + balance + ", accountType=" + accountType
-                + ", accCreationDate=" + accCreationDate + "overDraftLimit=" + overDraftLimit + ", duration=" + duration+", interestRate="
-                + interestRate +"]";
+    public LocalDate getOverdraftDate() {
+        return overdraftDate;
     }
+
+    public void setOverdraftDate(LocalDate overdraftDate) {
+        this.overdraftDate = overdraftDate;
+    }
+
+    public double deposit() {
+
+        System.out.println("Enter how much you want to deposit");
+        double amount = sc.nextInt();
+        long rand_int1 = rand.nextLong(1000);
+        LocalDate date = LocalDate.now();
+        transaction[transactionCount++] = new TransactionHistory(rand_int1, "Deposit", amount, date, getBalance() + amount);
+        setBalance(getBalance() + amount);
+        return amount;
+    }
+
     public double withdraw() {
-        System.out.println("Withdraw called");
-        return 1;
+        System.out.println("Enter amount you want to withdraw");
+        double amount = sc.nextInt();
+
+        if (getBalance() > amount) {
+            setBalance(getBalance() - amount);
+            return amount;
+        } else {
+            setOverdraftDate(LocalDate.now());
+            if (Math.abs(getBalance() - amount) > getOverDraftLimit()) {
+                System.out.println("You cannot withdraw money beyond overdraft limit");
+                return -4;
+            } else {
+                setBalance(getBalance() - amount);
+                return amount;
+            }
+        }
     }
 
-    public void displayTransactionsHistory()
-    {
+    public void displayTransactionsHistory() {
 
     }
 
-    public int todaysTransactionCount()
-    {
+    public int todaysTransactionCount() {
         return 0;
     }
 
