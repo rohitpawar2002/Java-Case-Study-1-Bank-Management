@@ -61,7 +61,7 @@ public class SavingAccount extends BankAccounts {
 
     public void checkLoanInterest() {
         double monthlyInterest = (balance * (interestRate / 100)) / 12; // Monthly interest
-        //balance += monthlyInterest; // Add interest to loan balance
+        balance += monthlyInterest; // Add interest to loan balance
 
         System.out.println("Interest of ₹" + monthlyInterest + " applied.");
     }

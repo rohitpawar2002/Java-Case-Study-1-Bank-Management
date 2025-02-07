@@ -10,9 +10,7 @@ public class SalaryAccount extends BankAccounts {
     public SalaryAccount(long accountNumber, String accHolderName, double balance, String accountType,
                          LocalDate accCreationDate, LocalDate lastTransactionDate) {
         super(accountNumber, accHolderName, balance, accountType, accCreationDate);
-//        this.salary = salary;
         this.lastTransactionDate = lastTransactionDate;
-//        this.isFreez = isFreez;
     }
 
     @Override

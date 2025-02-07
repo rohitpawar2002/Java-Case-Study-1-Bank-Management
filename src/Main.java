@@ -126,7 +126,6 @@ public class Main {
                     do {
                         System.out.println("+-----------------------------------+");
                         System.out.println(" 1.Check Interest        Press-1");
-                        System.out.println(" 2.Deposit Interest      Press-2");
                         System.out.println(" 2.Go to Main Menu       Press-0");
                         System.out.println("+-----------------------------------+");
                         System.out.println("Enter your choice");
@@ -138,13 +137,9 @@ public class Main {
                                 break;
                             }
                             case 2: {
-                                System.out.println("re");
                                 break;
                             }
                             case 3: {
-                                break;
-                            }
-                            case 4: {
                                 System.out.println("Enter correct choice");
                             }
                         }

@@ -89,7 +89,7 @@ public class LoanAccount extends BankAccounts {
         return false;
     }
 
-    public boolean payEMI() {
+    public double payEMI() {
         LocalDate dueDate = accCreationDate.plusMonths(tenureMonths);
         boolean isOverDue = LocalDate.now().isAfter(dueDate);
         double lateFee = 0;
@@ -106,16 +106,17 @@ public class LoanAccount extends BankAccounts {
         double emiWithLateFee = calculateEMI() + lateFee;
         if (amount < emiWithLateFee) {
             System.out.println("Error: Minimum EMI payment required: ₹" + emiWithLateFee);
-            return false;
+            return -1;
         }
         balance += amount;
+        transaction[transactionCount++] = new TransactionHistory(rand.nextLong(1000), "EMI Payment", amount, LocalDate.now(), getBalance() - amount);
         System.out.println("Payment of ₹" + amount + " received. Remaining Loan Balance: ₹" + balance);
 
         if (balance >= 0) {
             System.out.println("Congratulations! Your loan is fully repaid.");
         }
 
-        return true;
+        return amount;
     }
 
     public boolean checkLateFee() {

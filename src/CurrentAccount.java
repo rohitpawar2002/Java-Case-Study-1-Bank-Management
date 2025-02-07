@@ -53,9 +53,11 @@ public class CurrentAccount extends BankAccounts {
     public double withdraw() {
         System.out.println("Enter amount you want to withdraw");
         double amount = sc.nextInt();
+        long rand_int1 = rand.nextLong(1000);
 
         if (getBalance() > amount) {
             setBalance(getBalance() - amount);
+            transaction[transactionCount++] = new TransactionHistory(rand_int1, "Withdraw", amount, LocalDate.now(), getBalance());
             return amount;
         } else {
             setOverdraftDate(LocalDate.now());
@@ -64,20 +66,45 @@ public class CurrentAccount extends BankAccounts {
                 return -4;
             } else {
                 setBalance(getBalance() - amount);
+                transaction[transactionCount++] = new TransactionHistory(rand_int1, "Withdraw", amount, LocalDate.now(), getBalance());
                 return amount;
             }
         }
     }
 
     public void displayTransactionsHistory() {
-
+        for (int i = 0; i < transactionCount; i++) {
+            System.out.println("[ Transaction ID - " + transaction[i].getTransactionId() + ", Type of Transaction - "+ transaction[i].getType()+", Amount - "+transaction[i].getAmount()+", Date - "+transaction[i].getDate()+", Balance - "+transaction[i].getBalance()+"]");
+        }
     }
 
     public int todaysTransactionCount() {
-        return 0;
+        int count = 0;
+        if (transactionCount != 0) {
+            System.out.println("Account Holder Name: " + getAccHolderName() + " Account Number: " + getAccountNumber());
+            for (int i = 0; i < transactionCount; i++) {
+                if (transaction[i].date.isEqual(LocalDate.now())) {
+                    //transaction[i].displayTransactions();
+                    System.out.println("[ Transaction ID - " + transaction[i].getTransactionId() + ", Type of Transaction - "+ transaction[i].getType()+", Amount - "+transaction[i].getAmount()+", Date - "+transaction[i].getDate()+", Balance - "+transaction[i].getBalance()+"]");
+                    count++;
+                }
+            }
+        }
+        return count;
     }
 
     public int todaysTransactionsCount() {
-        return 0;
+        int count = 0;
+        if (transactionCount != 0) {
+            //System.out.println("Account Holder Name: " + getAccHolderName() + " Account Number: " + getAccountNumber());
+            for (int i = 0; i < transactionCount; i++) {
+                if (transaction[i].date.isEqual(LocalDate.now())) {
+                    //transaction[i].displayTransactions();
+                    //System.out.println("[ Transaction ID - " + transaction[i].getTransactionId() + ", Type of Transaction - "+ transaction[i].getType()+", Amount - "+transaction[i].getAmount()+", Date - "+transaction[i].getDate()+", Balance - "+transaction[i].getBalance()+"]");
+                    count++;
+                }
+            }
+        }
+        return count;
     }
 }
